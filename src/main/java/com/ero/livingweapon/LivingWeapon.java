@@ -1,6 +1,10 @@
 package com.ero.livingweapon;
 
+import com.ero.livingweapon.entity.ModEntityTypes;
+import com.ero.livingweapon.entity.client.NavoriRenderer;
+import com.ero.livingweapon.item.ModItems;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -11,12 +15,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(LivingWeapon.MOD_ID)
 public class LivingWeapon
 {
-    public static final String MOD_ID = "linving_weapon";
+    public static final String MOD_ID = "livingweapon";
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -25,10 +30,11 @@ public class LivingWeapon
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        GeckoLib.initialize();
+        ModEntityTypes.register(modEventBus);
 
 
-
-
+        ModItems.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -47,6 +53,7 @@ public class LivingWeapon
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            EntityRenderers.register(ModEntityTypes.NAVORI.get(), NavoriRenderer::new);
         }
     }
 }
